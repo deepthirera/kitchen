@@ -1,0 +1,26 @@
+sudo bash -c '
+ 
+# Pre-requisites
+apt-get -y update
+sudo apt-get --no-install-recommends -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev libgdbm-dev ncurses-dev automake libtool bison subversion pkg-config libffi-dev libcurl4-openssl-dev
+ 
+# Download and compile Ruby 2.0.0-p0
+cd /tmp
+wget ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p0.tar.gz
+tar -xvzf ruby-2.0.0-p0.tar.gz
+cd ruby-2.0.0-p0
+./configure --prefix=/usr/local
+make
+make install
+ 
+# Download and build Chef compatible with Ruby 2.0
+cd /tmp
+wget https://api.github.com/repos/opscode/chef/tarball --output-document=chef.tgz
+tar -xvzf chef.tgz
+cd opscode-chef*
+gem build chef.gemspec
+gem install chef-11.8.0.alpha.0.gem --no-ri --no-rdoc
+ 
+# The rest
+gem install ruby-shadow --no-ri --no-rdoc'
+
